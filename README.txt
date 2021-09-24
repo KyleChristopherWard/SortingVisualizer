@@ -1,0 +1,1 @@
+This project will be a single page React app that will include animations on common sorting algorithms.
