@@ -1,10 +1,18 @@
-import { render } from "@testing-library/react";
+//script imports
 import React from "react";
 import './SortingVisualizer.css';
+import {mergeSortAnimations} from '../SortingAlgorithms/algorithms.js';
+import {quickSort} from '../SortingAlgorithms/algorithms.js';
+
+//material UI components
 import Button from '@mui/material/Button';
 import Slider from '@mui/material/Slider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+
+//define variable?
+var arraySize = 70;
+const animationSpeed = 3;
 
 export default class SortingVisualizer extends React.Component {
     constructor(props){
@@ -27,9 +35,39 @@ export default class SortingVisualizer extends React.Component {
         this.setState({array});
     }
 
-    mergeSort() {}
+    //merge sort method
+    //the sorting algorithm call returns the animations. 
+    mergeSort() {
+        const animations = mergeSortAnimations(this.state.array);
+        for (let i = 0; i < animations.length; i++) {
+            const arrayBars = document.getElementsByClassName('array-bar');
+            const isColorChange = i % 3 !== 2;
+            if (isColorChange) {
+              const [barOneIndx, barTwoIndx] = animations[i];
+              const barOneStyle = arrayBars[barOneIndx].style;
+              const barTwoStyle = arrayBars[barTwoIndx].style;
+              const color = i % 3 === 0 ? 'red' : 'blue';
+              setTimeout(() => {
+                barOneStyle.backgroundColor = color;
+                barTwoStyle.backgroundColor = color;
+              }, i * animationSpeed);
+            } else {
+              setTimeout(() => {
+                const [barOneIndx, newHeight] = animations[i];
+                const barOneStyle = arrayBars[barOneIndx].style;
+                barOneStyle.height = `${newHeight}px`;
+              }, i * animationSpeed);
+            }
+          }
+        }
 
-    quickSort() {}
+
+    quickSort() {
+        const unsortedArray = this.state.array;
+        console.log(unsortedArray);
+        const sortedArray = quickSort(unsortedArray, 0, unsortedArray.length - 1);
+        console.log(sortedArray);
+    }
 
     heapSort() {}
 
@@ -37,7 +75,6 @@ export default class SortingVisualizer extends React.Component {
 
     render(){
         const {array} = this.state;
-        var arraySize = 70;
       
         //sets array size when the slider bar changes, this value is passed to reset array 
         //when button "generate random array is clicked"
@@ -70,7 +107,10 @@ export default class SortingVisualizer extends React.Component {
                     <div 
                         className = "array-bar" 
                         key={idx}
-                        style={{height: `${value}px`}}>
+                        style={{
+                            backgroundColor: "blue",
+                            height: `${value}px`,
+                            }}>
                     </div>
                 ))}
             </div>
