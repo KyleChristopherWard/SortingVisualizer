@@ -2,7 +2,7 @@
 import React from "react";
 import './SortingVisualizer.css';
 import {mergeSortAnimations} from '../SortingAlgorithms/algorithms.js';
-import {quickSort} from '../SortingAlgorithms/algorithms.js';
+import {quickSortAnimations} from '../SortingAlgorithms/algorithms.js';
 
 //material UI components
 import Button from '@mui/material/Button';
@@ -10,9 +10,11 @@ import Slider from '@mui/material/Slider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 
-//define variable?
+//define variables
 var arraySize = 70;
-const animationSpeed = 3;
+const animationSpeed = 5;
+const primaryBarColor = "blue";
+const secondaryBarColor = "red";
 
 export default class SortingVisualizer extends React.Component {
     constructor(props){
@@ -63,10 +65,20 @@ export default class SortingVisualizer extends React.Component {
 
 
     quickSort() {
-        const unsortedArray = this.state.array;
-        console.log(unsortedArray);
-        const sortedArray = quickSort(unsortedArray, 0, unsortedArray.length - 1);
-        console.log(sortedArray);
+        const animations = quickSortAnimations(this.state.array, primaryBarColor, secondaryBarColor);
+        
+        // do animations
+        for (let i = 0; i < animations.length; i++) {
+            const arrayBars = document.getElementsByClassName('array-bar');
+            
+            setTimeout(() => {
+            const [barIndx, barHeight, barColor] = animations[i]; 
+            const barStyle = arrayBars[barIndx].style;
+            barStyle.backgroundColor = barColor;
+            barStyle.height = `${barHeight}px`;
+
+            }, i * animationSpeed);
+        }
     }
 
     heapSort() {}
