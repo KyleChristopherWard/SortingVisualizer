@@ -1,8 +1,7 @@
 //script imports
 import React from "react";
 import './SortingVisualizer.css';
-import {mergeSortAnimations} from '../SortingAlgorithms/algorithms.js';
-import {quickSortAnimations} from '../SortingAlgorithms/algorithms.js';
+import {heapSortAnimations, mergeSortAnimations, quickSortAnimations} from '../SortingAlgorithms/algorithms.js';
 
 //material UI components
 import Button from '@mui/material/Button';
@@ -63,7 +62,6 @@ export default class SortingVisualizer extends React.Component {
           }
         }
 
-
     quickSort() {
         const animations = quickSortAnimations(this.state.array, primaryBarColor, secondaryBarColor);
         
@@ -81,7 +79,23 @@ export default class SortingVisualizer extends React.Component {
         }
     }
 
-    heapSort() {}
+    heapSort() {
+        const animations = heapSortAnimations(this.state.array, primaryBarColor, secondaryBarColor);
+        console.log(animations);
+        
+        // do animations
+        for (let i = 0; i < animations.length; i++) {
+            const arrayBars = document.getElementsByClassName('array-bar');
+            
+            setTimeout(() => {
+            const [barIndx, barHeight, barColor] = animations[i]; 
+            const barStyle = arrayBars[barIndx].style;
+            barStyle.backgroundColor = barColor;
+            barStyle.height = `${barHeight}px`;
+
+            }, i * animationSpeed);
+        }
+    }
 
     bubbleSort() {}
 
