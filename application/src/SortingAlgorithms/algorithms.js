@@ -140,7 +140,6 @@ export function heapSortAnimations(array, primaryBarColor, secondaryBarColor) {
     // call the sorting function and return the animations
     heapSort(array, animations, primaryBarColor, secondaryBarColor);
     return animations;
-    //return array; 
 }
 
 // function will sort the given array and create animations
@@ -243,5 +242,45 @@ function heapify(array, n, i, animations, primaryBarColor, secondaryBarColor) {
 
         // call heapify recursivly on the rest of the sub-tree
         heapify(array, n, largest, animations);
+    }
+}
+
+//------------------------------------------------------------------------------
+// Bubble Sort
+//------------------------------------------------------------------------------
+export function bubbleSortAnimations(array, primaryBarColor, secondaryBarColor) {
+    //define array for the animations
+    const animations = [];
+
+    // call the sorting function and return the animations
+    bubbleSort(array, animations, primaryBarColor, secondaryBarColor);
+    return animations;
+}
+
+function bubbleSort(array, animations, primaryBarColor, secondaryBarColor) {
+    //define constant for length of array
+    var n = array.length;
+
+    // loop through all the array elements 
+    for (var i = 0; i < n - 1; i++)
+    {
+        // the i'th element is in place so loop throught the rest 
+        for (var j = 0; j < n - i - 1; j++)
+        {
+            // the an element is greater then the next element we swap them
+            if (array[j] > array[j + 1])
+            {
+            //highlight the bars we are comparing
+            animations.push([j, array[j], secondaryBarColor]);
+            animations.push([j + 1, array[j + 1], secondaryBarColor])
+            
+            // perform swap
+            swap(array, j, j + 1);
+            
+            //revert bars to original color
+            animations.push([j, array[j], primaryBarColor]);
+            animations.push([j + 1, array[j + 1], primaryBarColor])
+            }
+        }
     }
 }

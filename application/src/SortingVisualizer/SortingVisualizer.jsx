@@ -1,7 +1,7 @@
 //script imports
 import React from "react";
 import './SortingVisualizer.css';
-import {heapSortAnimations, mergeSortAnimations, quickSortAnimations} from '../SortingAlgorithms/algorithms.js';
+import {bubbleSortAnimations, heapSortAnimations, mergeSortAnimations, quickSortAnimations} from '../SortingAlgorithms/algorithms.js';
 
 //material UI components
 import Button from '@mui/material/Button';
@@ -64,40 +64,18 @@ export default class SortingVisualizer extends React.Component {
 
     quickSort() {
         const animations = quickSortAnimations(this.state.array, primaryBarColor, secondaryBarColor);
-        
-        // do animations
-        for (let i = 0; i < animations.length; i++) {
-            const arrayBars = document.getElementsByClassName('array-bar');
-            
-            setTimeout(() => {
-            const [barIndx, barHeight, barColor] = animations[i]; 
-            const barStyle = arrayBars[barIndx].style;
-            barStyle.backgroundColor = barColor;
-            barStyle.height = `${barHeight}px`;
-
-            }, i * animationSpeed);
-        }
+        animate(animations);
     }
 
     heapSort() {
         const animations = heapSortAnimations(this.state.array, primaryBarColor, secondaryBarColor);
-        console.log(animations);
-        
-        // do animations
-        for (let i = 0; i < animations.length; i++) {
-            const arrayBars = document.getElementsByClassName('array-bar');
-            
-            setTimeout(() => {
-            const [barIndx, barHeight, barColor] = animations[i]; 
-            const barStyle = arrayBars[barIndx].style;
-            barStyle.backgroundColor = barColor;
-            barStyle.height = `${barHeight}px`;
-
-            }, i * animationSpeed);
-        }
+        animate(animations);
     }
 
-    bubbleSort() {}
+    bubbleSort() {
+        const animations = bubbleSortAnimations(this.state.array, primaryBarColor, secondaryBarColor);
+        animate(animations);
+    }
 
     render(){
         const {array} = this.state;
@@ -148,4 +126,20 @@ export default class SortingVisualizer extends React.Component {
 //Function to generate a random integer within the given range
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+//Function to perform animations 
+function animate(animations){
+    // do animations
+    for (let i = 0; i < animations.length; i++) {
+        const arrayBars = document.getElementsByClassName('array-bar');
+            
+        setTimeout(() => {
+        const [barIndx, barHeight, barColor] = animations[i]; 
+        const barStyle = arrayBars[barIndx].style;
+        barStyle.backgroundColor = barColor;
+        barStyle.height = `${barHeight}px`;
+
+        }, i * animationSpeed);
+    }
 }
