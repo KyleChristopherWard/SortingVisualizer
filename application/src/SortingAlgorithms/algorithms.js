@@ -1,56 +1,108 @@
 //------------------------------------------------------------------------------
 // Merge Sort
 //------------------------------------------------------------------------------
-export function mergeSortAnimations(array){
+export function mergeSortAnimations(array, primaryBarColor, secondaryBarColor) {
     const animations = [];
     //edgecase, not needed as smallest array allowed is 50 bars.
     //if (array.length <= 1) return array;
-    const auxArray = array.slice();
-    mergeSortHelper (array, 0, array.length - 1, auxArray, animations);
+
+    mergeSort (array, 0, array.length - 1, animations, primaryBarColor, secondaryBarColor);
     return animations;
 }
 
-function mergeSortHelper(mainArray, floorIndx, ceilIndx, auxArray, animations,
-){
-    if (floorIndx === ceilIndx) return;
-    const middleIndx = Math.floor((floorIndx + ceilIndx) / 2);
-    mergeSortHelper(auxArray, floorIndx, middleIndx, mainArray, animations);
-    mergeSortHelper(auxArray, middleIndx +1, ceilIndx, mainArray, animations);
-    doMerge(mainArray, floorIndx, middleIndx, ceilIndx, auxArray, animations);
+function mergeSort(array, left, right, animations, primaryBarColor, secondaryBarColor) {
+    //return recursivly 
+    if (left >= right) return;
+
+    // calculate middle index
+    const mid = Math.floor((left + right) / 2);
+
+    //call merge sort on upper and lower halves
+    mergeSort(array, left, mid, animations, primaryBarColor, secondaryBarColor);
+    mergeSort(array, mid + 1, right, animations, primaryBarColor, secondaryBarColor);
+
+    //merge sub-arrays
+    merge(array, left, mid, right, animations, primaryBarColor, secondaryBarColor);
 }
 
-function doMerge(mainArray, floorIndx, middleIndx, ceilIndx, auxArray, animations,
-)   {
-    let k = floorIndx;
-    let i = floorIndx;
-    let j = middleIndx + 1;
+function merge(array, left, mid, right, animations, primaryBarColor, secondaryBarColor) {
+    //calculate length of temporary arrays
+    var n1 = mid - left + 1;
+    var n2 = right - mid;
+  
+    // Create temporary arrays
+    var leftArray = new Array(n1); 
+    var rightArray = new Array(n2);
+  
+    // Copy elements to temporary arrays
+    for (var i = 0; i < n1; i++) {
+        leftArray[i] = array[left + i];
+    }
+    for (var j = 0; j < n2; j++) {
+        rightArray[j] = array[mid + 1 + j];    
+    }
 
-    while ( i <= middleIndx && j <= ceilIndx){
-        animations.push([i, j]);
-        animations.push([i, j]);
+    // Initial index of first subarray
+    i = 0;
+    // Initial index of second subarray
+    j = 0;
+    // Initial index of merged subarray
+    let k = left;
 
-        if(auxArray[i] <= auxArray[j]){
-            animations.push([k, auxArray[i]]);
-            mainArray[k++] = auxArray[i++];
-        } else {
-            animations.push([k, auxArray[j]]);
-            mainArray[k++] = auxArray[j++];
+    //compare values and overwrite correct value from the left/right array to the main array
+    while(i < n1 && j < n2) {
+        //push animation to hightlight bars being compared
+        animations.push([left + i, array[left + i], secondaryBarColor]);
+        animations.push([mid + 1 + j, array[mid + 1 + j], secondaryBarColor]);
+
+        //push animation to revert bars to original color
+        animations.push([left + i, array[left + i], primaryBarColor]);
+        animations.push([mid + 1 + j, array[mid + 1 + j], primaryBarColor]);
+
+        if(leftArray[i] <= rightArray[j]){
+            //push animation to highlight bar that is being overwritten
+            animations.push([k, array[k], secondaryBarColor]);
+            //overwrite value
+            array[k] = leftArray[i];
+            //push animation to revert color with neew overwritten value
+            animations.push([k, array[k], primaryBarColor]);           
+            i++;
+        } 
+        else {
+            //push animation to highlight bar that is being overwritten
+            animations.push([k, array[k], secondaryBarColor]);
+            //overwrite value
+            array[k] = rightArray[j];
+            //push animation to revert color with neew overwritten value
+            animations.push([k, array[k], primaryBarColor]);            
+            j++;
         }
+        k++;
     }
 
-    while(i <= middleIndx){
-        animations.push([i, i]);
-        animations.push([i, i]);
-        animations.push([k, auxArray[i]]);
-        mainArray[k++] = auxArray[i++];
+    //copy remaining elements of the left array if there are any
+    while(i < n1) {
+        //push animation to highlight bar that is being overwritten
+        animations.push([k, array[k], secondaryBarColor]);       
+        //overwrite value
+        array[k] = leftArray[i];
+        //push animation to revert color with neew overwritten value
+        animations.push([k, array[k], primaryBarColor]); 
+        i++;
+        k++;
     }
 
-    while (j <= ceilIndx){
-        animations.push([j, j]);
-        animations.push([j, j]);
-        animations.push([k, auxArray[j]]);
-        mainArray[k++] = auxArray[j++];
-    }
+    //copy remaining elements of the right array if there are any
+    while(j < n2) {
+        //push animation to highlight bar that is being overwritten
+        animations.push([k, array[k], secondaryBarColor]);
+        //overwrite value
+        array[k] = rightArray[j];
+        //push animation to revert color with neew overwritten value
+        animations.push([k, array[k], primaryBarColor]); 
+        j++;
+        k++;
+    }    
 }
 
 //------------------------------------------------------------------------------
@@ -63,7 +115,6 @@ export function quickSortAnimations(array, primaryBarColor, SecondaryBarColor){
     quickSort(array, 0, array.length -1, animations, primaryBarColor, SecondaryBarColor);
     return animations;
 }
-
 
 function quickSort(array, lowIndx, highIndx, animations, primaryBarColor, SecondaryBarColor) {
 
@@ -96,7 +147,7 @@ function partition(array, animations, lowIndx, highIndx, primaryBarColor, Second
 
         //If we find a smaller (or equal) element, we swap current element with arr[j].
         if (array[j] <= array[pivotIndx]) {
-            // push the inxed of the element to be swapped to chnage its color
+            // push the index of the element to be swapped to change its color
             animations.push([i, array[i], SecondaryBarColor]);
             //swap the array bars
             swap(array, i, j);
