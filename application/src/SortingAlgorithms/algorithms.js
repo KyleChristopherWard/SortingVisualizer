@@ -56,15 +56,16 @@ function merge(array, left, mid, right, animations, primaryBarColor, secondaryBa
         animations.push([mid + 1 + j, array[mid + 1 + j], secondaryBarColor]);
 
         //push animation to revert bars to original color
+        animations.push([mid + 1 + j, array[mid + 1 + j], primaryBarColor]);        
         animations.push([left + i, array[left + i], primaryBarColor]);
-        animations.push([mid + 1 + j, array[mid + 1 + j], primaryBarColor]);
+
 
         if(leftArray[i] <= rightArray[j]){
             //push animation to highlight bar that is being overwritten
             animations.push([k, array[k], secondaryBarColor]);
             //overwrite value
             array[k] = leftArray[i];
-            //push animation to revert color with neew overwritten value
+            //push animation to revert color with new overwritten value
             animations.push([k, array[k], primaryBarColor]);           
             i++;
         } 
@@ -73,7 +74,7 @@ function merge(array, left, mid, right, animations, primaryBarColor, secondaryBa
             animations.push([k, array[k], secondaryBarColor]);
             //overwrite value
             array[k] = rightArray[j];
-            //push animation to revert color with neew overwritten value
+            //push animation to revert color with new overwritten value
             animations.push([k, array[k], primaryBarColor]);            
             j++;
         }
@@ -86,7 +87,7 @@ function merge(array, left, mid, right, animations, primaryBarColor, secondaryBa
         animations.push([k, array[k], secondaryBarColor]);       
         //overwrite value
         array[k] = leftArray[i];
-        //push animation to revert color with neew overwritten value
+        //push animation to revert color with new overwritten value
         animations.push([k, array[k], primaryBarColor]); 
         i++;
         k++;
@@ -98,7 +99,7 @@ function merge(array, left, mid, right, animations, primaryBarColor, secondaryBa
         animations.push([k, array[k], secondaryBarColor]);
         //overwrite value
         array[k] = rightArray[j];
-        //push animation to revert color with neew overwritten value
+        //push animation to revert color with new overwritten value
         animations.push([k, array[k], primaryBarColor]); 
         j++;
         k++;
@@ -322,15 +323,17 @@ function bubbleSort(array, animations, primaryBarColor, secondaryBarColor) {
             if (array[j] > array[j + 1])
             {
             //highlight the bars we are comparing
+            animations.push([j + 1, array[j + 1], secondaryBarColor]);            
             animations.push([j, array[j], secondaryBarColor]);
-            animations.push([j + 1, array[j + 1], secondaryBarColor])
+
             
             // perform swap
             swap(array, j, j + 1);
             
             //revert bars to original color
+            animations.push([j + 1, array[j + 1], primaryBarColor]);
             animations.push([j, array[j], primaryBarColor]);
-            animations.push([j + 1, array[j + 1], primaryBarColor])
+
             }
         }
     }
